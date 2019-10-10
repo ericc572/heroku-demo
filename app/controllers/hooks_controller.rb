@@ -1,25 +1,35 @@
 class HooksController < ApplicationController
+  FIELD_MAPPINGS = {
+    :name => 'kSHzJrMOjcMD',
+    :email => 'qFfhkmeEyC9G',
+    :object => 'dzfVsFu5xbTU',
+    #:rating => 'YcqKcFDtrrjV'
+  }
+
+  TYPE_MAPPINGS = {
+    :name => "text",
+    :email => "text",
+    :object => "text"
+    #:rating => { "choice" => "label" }
+  }
+
   def survey_created
     # If the body contains the form_response parameter...
-    data = JSON.parse(response.body)
-    if data[:response_type].present?
+    data = params[:form_response]
+    if data.present?
       # Create a new Survey object based on the received parameters...
-      response = data[:form_response]
       questions = data[:definition]
       answers = data[:answers]
+      time = data[:submitted_at]
 
-     data[:answers].map do |a|
-      answer_type = a['type']
-      Survey.create!(
-        question_id: a['field']['id'],
-        answer_type: answer_type,
-        answer: a[answer_type]
+      # UserAnswerSync.new(answers, questions).run
+
+      User.create!(
+        name: answers.find { |h| h[:field][:id] == FIELD_MAPPINGS[:name] }[TYPE_MAPPINGS[:name]],
+        email: answers.find { |h| h[:field][:id] == FIELD_MAPPINGS[:email] }[TYPE_MAPPINGS[:email]],
+        object: answers.find { |h| h[:field][:id] == FIELD_MAPPINGS[:object] }[TYPE_MAPPINGS[:object]]
       )
-     end
     end
-
-    # The webhook doesn't require a response but let's make sure
-    # we don't send anything
-    render :nothing => true
+    render status: 200, json: @s.to_json
   end
 end
