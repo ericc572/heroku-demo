@@ -24,10 +24,10 @@ class HooksController < ApplicationController
 
       # UserAnswerSync.new(answers, questions).run
 
-      User.create!(
-        name: answers.find { |h| h[:field][:id] == FIELD_MAPPINGS[:name] }[TYPE_MAPPINGS[:name]],
+      Contact.create!(
+        lastname: answers.find { |h| h[:field][:id] == FIELD_MAPPINGS[:name] }[TYPE_MAPPINGS[:name]],
         email: answers.find { |h| h[:field][:id] == FIELD_MAPPINGS[:email] }[TYPE_MAPPINGS[:email]],
-        object: answers.find { |h| h[:field][:id] == FIELD_MAPPINGS[:object] }[TYPE_MAPPINGS[:object]]
+        #object: answers.find { |h| h[:field][:id] == FIELD_MAPPINGS[:object] }[TYPE_MAPPINGS[:object]]
       )
     end
     render status: 200, json: @s.to_json
