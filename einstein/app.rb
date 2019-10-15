@@ -20,12 +20,22 @@ if __FILE__ == $0
   puts JSON.pretty_generate(token)
 
   access_token = token["access_token"]
+  refresh_token = token["refresh_token"]
+
+  # if exp + 60 < (Time.now.utc)
+  #   token = JSON.parse(AccessTokenRefresher.new(refresh_token).run)
+  #   puts "Token was refreshed: #{token}"
+  #   access_token = token["access_token"]
+  # end
+
+  puts "Enter a wall of text to predict its sentiment: "
+  predict_text = ARGV
 
   # Make a prediction call
   prediction_response = JSON.parse(
       PredictHelper.predict(access_token,
-                            "GeneralImageClassifier",
-                            "http://dgicdplf3pvka.cloudfront.net/images/dogbreeds/large/Siberian-Husky.jpg"))
+                            "CommunitySentiment",
+                            predict_text))
 
   puts "\nPrediction response:\n"
   puts JSON.pretty_generate(prediction_response)
