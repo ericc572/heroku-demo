@@ -29,13 +29,13 @@ if __FILE__ == $0
   # end
 
   puts "Enter a wall of text to predict its sentiment: "
-  predict_text = ARGV
+  # predict_text = ARGV
 
   # Make a prediction call
   prediction_response = JSON.parse(
       PredictHelper.predict(access_token,
                             "CommunitySentiment",
-                            predict_text))
+                            "Hi my name is Eric and I am awesome :D"))
 
   puts "\nPrediction response:\n"
   puts JSON.pretty_generate(prediction_response)
