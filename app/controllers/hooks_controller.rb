@@ -32,4 +32,8 @@ class HooksController < ApplicationController
     end
     render status: 200, json: @s.to_json
   end
+
+  def sms_received
+    puts params
+  end
 end

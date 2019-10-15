@@ -1,11 +1,13 @@
-require './jwt'
-require './token_generator'
-require './predict'
+require './einstein/jwt'
+require './einstein/token_generator'
+require './einstein/predict'
 require 'json'
+require 'highline/import'
 
 if __FILE__ == $0
   accId = ENV['EINSTEIN_VISION_ACCOUNT_ID']
 
+  text_input = ask "Enter a wall of text to analyze its sentiment: "
   # Remove all '\n' and add newline
   privKey = String.new(ENV['EINSTEIN_VISION_PRIVATE_KEY'])
   privKey.gsub!('\n', "\n")
@@ -29,13 +31,12 @@ if __FILE__ == $0
   # end
 
   puts "Enter a wall of text to predict its sentiment: "
-  # predict_text = ARGV
 
   # Make a prediction call
   prediction_response = JSON.parse(
       PredictHelper.predict(access_token,
                             "CommunitySentiment",
-                            "Hi my name is Eric and I am awesome :D"))
+                            text_input))
 
   puts "\nPrediction response:\n"
   puts JSON.pretty_generate(prediction_response)

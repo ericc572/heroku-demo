@@ -3,5 +3,6 @@ Rails.application.routes.draw do
   root 'welcome#index'
   scope '/hooks', :controller => :hooks do
     post :survey_created
+    post :sms_received
   end
 end
