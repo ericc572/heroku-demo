@@ -2,14 +2,13 @@ class HooksController < ApplicationController
   FIELD_MAPPINGS = {
     :name => 'kSHzJrMOjcMD',
     :email => 'qFfhkmeEyC9G',
-    :object => 'dzfVsFu5xbTU',
-    #:rating => 'YcqKcFDtrrjV'
+    :comment => 'uGwJkwgN6GEK'
   }
 
   TYPE_MAPPINGS = {
     :name => "text",
     :email => "text",
-    :object => "text"
+    :comment => "text"
     #:rating => { "choice" => "label" }
   }
 
@@ -22,12 +21,14 @@ class HooksController < ApplicationController
       answers = data[:answers]
       time = data[:submitted_at]
 
-      # UserAnswerSync.new(answers, questions).run
+      comment = answers.find { |h| h[:field][:id] == FIELD_MAPPINGS[:comment] }[TYPE_MAPPINGS[:comment]]
+
+      positive_percentage = EinsteinSentimentAnalyzerJob.perform_later(comment)
 
       Contact.create!(
         lastname: answers.find { |h| h[:field][:id] == FIELD_MAPPINGS[:name] }[TYPE_MAPPINGS[:name]],
         email: answers.find { |h| h[:field][:id] == FIELD_MAPPINGS[:email] }[TYPE_MAPPINGS[:email]],
-        #object: answers.find { |h| h[:field][:id] == FIELD_MAPPINGS[:object] }[TYPE_MAPPINGS[:object]]
+        customersatisfaction__c: positive_percentage
       )
     end
     render status: 200, json: @s.to_json
