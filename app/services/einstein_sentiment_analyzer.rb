@@ -3,18 +3,17 @@ require 'rest-client'
 
 class Config
   def self.account_id
-    ENV.fetch("EINSTEIN_VISION_ACCOUNT_ID")
+    ENV["EINSTEIN_VISION_ACCOUNT_ID"]
   end
 
   def self.private_key
-    ENV.fetch("EINSTEIN_VISION_PRIVATE_KEY")
+    ENV["EINSTEIN_VISION_PRIVATE_KEY"].gsub!('\n', "\n")
   end
 end
 
 class EinsteinSentimentAnalyzer
   def initialize(contact_id, comment)
     @account_id = Config.account_id
-    @private_key = Config.private_key
     @contact_id = contact_id
     @comment = comment
     @access_token = nil
@@ -22,9 +21,8 @@ class EinsteinSentimentAnalyzer
 
   def run
     exp = Time.now.to_i + (60 * 15)
-    private_key.gsub!('\n', "\n")
 
-    assertion = JwtHelper.new(account_id, private_key, exp).sign
+    assertion = JwtHelper.new(@account_id, Config.private_key, exp).sign
     token = JSON.parse(TokenGenerator.new(assertion).generate_token)
     puts "\nGenerated access token:\n"
     puts JSON.pretty_generate(token)
@@ -38,13 +36,13 @@ class EinsteinSentimentAnalyzer
       access_token = token["access_token"]
     end
 
-    puts "Predicting sentiment of comment: #{comment}"
+    puts "Predicting sentiment of comment: #{@comment}"
 
     # Make a prediction call
     prediction_response = JSON.parse(
         PredictHelper.new(access_token,
                               "CommunitySentiment",
-                              comment).predict)
+                              @comment).predict)
 
     puts "\nPrediction response:\n"
     puts JSON.pretty_generate(prediction_response)
