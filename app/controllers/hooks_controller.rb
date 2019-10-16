@@ -34,6 +34,16 @@ class HooksController < ApplicationController
   end
 
   def sms_received
-    puts params
+    puts "SMS was received. Saving data now: "
+    if params.present?
+      SmsResponse.create!(
+        phone_number: params[:participant_phone_number],
+        question: params[:question_text],
+        response_timestamp: params[:result_timestamp],
+        response_choice: params[:result_answer],
+        response_answer: params[:result_response]
+      )
+    end
+    render status: 200
   end
 end

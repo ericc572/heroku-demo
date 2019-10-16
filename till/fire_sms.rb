@@ -7,9 +7,9 @@ if __FILE__ == $0
   payload = {
     "phone" => ["14154703971"],
     "questions" => [{
-      "text" => "Hi! What is your favorite color?",
-      "tag" => "favorite_color",
-      "responses" => ["Red", "Green", "Yellow"],
+      "text" => "Hi! How was your camping experience today?",
+      "tag" => "camping_rating",
+      "responses" => ["Great!", "Good", "Decent :/", "Bad :("],
       "webhook" => "https://typeform-dreamforce.herokuapp.com/hooks/sms_received"
     }],
     "conclusion" => "Thank you for your time!"

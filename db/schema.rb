@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_10_11_164920) do
+ActiveRecord::Schema.define(version: 2019_10_16_164511) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -28,6 +28,16 @@ ActiveRecord::Schema.define(version: 2019_10_11_164920) do
     t.string "location"
     t.integer "recommendation"
     t.text "suggestion"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "sms_responses", force: :cascade do |t|
+    t.string "phone_number"
+    t.string "question"
+    t.string "response_timestamp"
+    t.string "response_choice"
+    t.string "response_answer"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end

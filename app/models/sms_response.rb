@@ -1,0 +1,2 @@
+class SmsResponse < ApplicationRecord
+end
