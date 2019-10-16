@@ -23,13 +23,16 @@ class HooksController < ApplicationController
 
       comment = answers.find { |h| h[:field][:id] == FIELD_MAPPINGS[:comment] }[TYPE_MAPPINGS[:comment]]
 
-      positive_percentage = EinsteinSentimentAnalyzerJob.perform_later(comment)
-
-      Contact.create!(
+      contact = Contact.create!(
         lastname: answers.find { |h| h[:field][:id] == FIELD_MAPPINGS[:name] }[TYPE_MAPPINGS[:name]],
         email: answers.find { |h| h[:field][:id] == FIELD_MAPPINGS[:email] }[TYPE_MAPPINGS[:email]],
-        customersatisfaction__c: positive_percentage
+        # customersatisfaction__c: positive_percentage
       )
+
+      puts "comment: #{comment}"
+
+      puts "running einstein job:"
+      EinsteinSentimentAnalyzerJob.perform_later(contact.id, comment)
     end
     render status: 200, json: @s.to_json
   end

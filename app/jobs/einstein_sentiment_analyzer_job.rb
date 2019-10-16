@@ -1,8 +1,8 @@
 class EinsteinSentimentAnalyzerJob < ActiveJob::Base
   queue_as :default
 
-  def perform(comment)
+  def perform(contact_id, comment)
     puts "performing sentiment analysis...."
-    EinsteinSentimentAnalyzer.new(comment).run
+    EinsteinSentimentAnalyzer.new(contact_id, comment).run
   end
 end

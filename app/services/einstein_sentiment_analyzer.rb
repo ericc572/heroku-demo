@@ -12,9 +12,10 @@ class Config
 end
 
 class EinsteinSentimentAnalyzer
-  def initialize(comment)
+  def initialize(contact_id, comment)
     @account_id = Config.account_id
     @private_key = Config.private_key
+    @contact_id = contact_id
     @comment = comment
     @access_token = nil
   end
@@ -47,6 +48,7 @@ class EinsteinSentimentAnalyzer
 
     puts "\nPrediction response:\n"
     puts JSON.pretty_generate(prediction_response)
-    prediction_response[:probabilities].find { |h| h[:label] == "positive" }[:probability]
+    percentage = prediction_response[:probabilities].find { |h| h[:label] == "positive" }[:probability]
+    Contact.find(contact_id).update(customersatisfaction__c: positive_percentage)
   end
 end
