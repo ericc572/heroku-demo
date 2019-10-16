@@ -1,7 +1,13 @@
 require 'jwt'
 
-module JwtHelper
-  def JwtHelper.sign(subject, privateKey, expiry)
+class JwtHelper
+  def initialize(subject, privateKey, expiry)
+    @subject = subject
+    @privateKey = privateKey
+    @expiry = expiry
+  end
+
+  def sign
     rsa_private = OpenSSL::PKey::RSA.new(privateKey)
     payload = {
         :sub => subject,

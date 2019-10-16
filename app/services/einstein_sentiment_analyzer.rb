@@ -1,6 +1,5 @@
 require 'json'
 require 'rest-client'
-require '../services'
 
 class Config
   def self.account_id
@@ -24,8 +23,8 @@ class EinsteinSentimentAnalyzer
     exp = Time.now.to_i + (60 * 15)
     private_key.gsub!('\n', "\n")
 
-    assertion = JwtHelper.sign(account_id, private_key, exp)
-    token = JSON.parse(TokenGenerator.generate_token(assertion))
+    assertion = JwtHelper.new(account_id, private_key, exp).sign
+    token = JSON.parse(TokenGenerator.new(assertion).generate_token)
     puts "\nGenerated access token:\n"
     puts JSON.pretty_generate(token)
 
@@ -42,14 +41,12 @@ class EinsteinSentimentAnalyzer
 
     # Make a prediction call
     prediction_response = JSON.parse(
-        PredictHelper.predict(access_token,
+        PredictHelper.new(access_token,
                               "CommunitySentiment",
-                              comment))
+                              comment).predict)
 
     puts "\nPrediction response:\n"
     puts JSON.pretty_generate(prediction_response)
-    prediction_response[:probabilities].find { |h| h[:label] == "positive" }[:probability],
+    prediction_response[:probabilities].find { |h| h[:label] == "positive" }[:probability]
   end
-
-  private
 end
