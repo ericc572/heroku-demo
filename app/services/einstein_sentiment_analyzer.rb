@@ -49,6 +49,6 @@ class EinsteinSentimentAnalyzer
     puts "\nPrediction response:\n"
     puts JSON.pretty_generate(prediction_response)
     percentage = prediction_response["probabilities"].find { |h| h["label"] == "positive" }["probability"]
-    Contact.find(@contact_id).update(customersatisfaction__c: percentage)
+    Contact.find(@contact_id).update(customersatisfaction__c: percentage*100)
   end
 end
