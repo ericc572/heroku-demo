@@ -64,11 +64,11 @@ class EinsteinSentimentAnalyzer
       PredictHelper.new(access_token, "CommunitySentiment", comment).predict)
     puts "\nPrediction response:\n"
     puts JSON.pretty_generate(prediction_response)
-    update_contact
+    update_contact(prediction_response)
   end
 
-  def update_contact
-    percentage = prediction_response["probabilities"].find { |h| h["label"] == "positive" }["probability"]
+  def update_contact(prediction)
+    percentage = prediction["probabilities"].find { |h| h["label"] == "positive" }["probability"]
     Contact.find(contact_id).update(customersatisfaction__c: percentage*100)
   end
 end
