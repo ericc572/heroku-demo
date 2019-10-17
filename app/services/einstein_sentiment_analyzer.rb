@@ -20,35 +20,55 @@ class EinsteinSentimentAnalyzer
   end
 
   def run
-    exp = Time.now.to_i + (60 * 15)
-    private_key = Config.private_key
-    # private_key.gsub!('\n', "\n")
+    sign_jwt_token
+    predict_sentiment
+  end
 
-    assertion = JwtHelper.new(@account_id, private_key, exp).sign
+  private
+
+  attr_accessor :account_id, :contact_id, :comment, :access_token
+
+  def sign_jwt_token
+    assertion = JwtHelper.new(account_id, Config.private_key, expires_at).sign
+    generate_token(assertion)
+  end
+
+  def expires_at
+    Time.now.to_i + (60 * 15)
+  end
+
+  def generate_token(assertion)
     token = JSON.parse(TokenGenerator.new(assertion).generate_token)
     puts "\nGenerated access token:\n"
     puts JSON.pretty_generate(token)
-
-    access_token = token["access_token"]
+    @access_token = token["access_token"]
     refresh_token = token["refresh_token"]
 
-    if exp + 60 < (Time.now.utc).to_i
-      token = JSON.parse(AccessTokenRefresher.new(refresh_token).run)
-      puts "Token was refreshed: #{token}"
-      access_token = token["access_token"]
+    if expires_at + 60 < (Time.now.utc).to_i
+      refresh_request(refresh_token)
     end
+  end
 
-    puts "Predicting sentiment of comment: #{@comment}"
+  def refresh_request(refresh_token)
+    token = JSON.parse(AccessTokenRefresher.new(refresh_token).run)
+    puts "Token was refreshed: #{token}"
+    @access_token = token["access_token"]
+  end
+
+  def predict_sentiment
+    puts "Predicting sentiment of comment: #{comment}"
 
     # Make a prediction call
+    puts access_token
     prediction_response = JSON.parse(
-        PredictHelper.new(access_token,
-                              "CommunitySentiment",
-                              @comment).predict)
-
+      PredictHelper.new(access_token, "CommunitySentiment", comment).predict)
     puts "\nPrediction response:\n"
     puts JSON.pretty_generate(prediction_response)
+    update_contact
+  end
+
+  def update_contact
     percentage = prediction_response["probabilities"].find { |h| h["label"] == "positive" }["probability"]
-    Contact.find(@contact_id).update(customersatisfaction__c: percentage*100)
+    Contact.find(contact_id).update(customersatisfaction__c: percentage*100)
   end
 end
