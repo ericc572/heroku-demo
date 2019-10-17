@@ -9,8 +9,8 @@ class PredictHelper
 
   def predict
       RestClient.post('https://api.einstein.ai/v2/language/sentiment',
-                    {:document => document,
-                     :modelId => model_id, :multipart => true},
-                    headers = {:authorization=> "Bearer #{token}"})
+                    {:document => @document,
+                     :modelId => @model_id, :multipart => true},
+                    headers = {:authorization=> "Bearer #{@token}"})
   end
 end

@@ -24,7 +24,7 @@ class EinsteinSentimentAnalyzer
     private_key = Config.private_key
     # private_key.gsub!('\n', "\n")
 
-    assertion = JwtHelper.new(account_id, private_key, exp).sign
+    assertion = JwtHelper.new(@account_id, private_key, exp).sign
     token = JSON.parse(TokenGenerator.new(assertion).generate_token)
     puts "\nGenerated access token:\n"
     puts JSON.pretty_generate(token)
@@ -32,23 +32,23 @@ class EinsteinSentimentAnalyzer
     access_token = token["access_token"]
     refresh_token = token["refresh_token"]
 
-    if exp + 60 < (Time.now.utc)
+    if exp + 60 < (Time.now.utc).to_i
       token = JSON.parse(AccessTokenRefresher.new(refresh_token).run)
       puts "Token was refreshed: #{token}"
       access_token = token["access_token"]
     end
 
-    puts "Predicting sentiment of comment: #{comment}"
+    puts "Predicting sentiment of comment: #{@comment}"
 
     # Make a prediction call
     prediction_response = JSON.parse(
         PredictHelper.new(access_token,
                               "CommunitySentiment",
-                              comment).predict)
+                              @comment).predict)
 
     puts "\nPrediction response:\n"
     puts JSON.pretty_generate(prediction_response)
-    percentage = prediction_response[:probabilities].find { |h| h[:label] == "positive" }[:probability]
-    Contact.find(contact_id).update(customersatisfaction__c: positive_percentage)
+    percentage = prediction_response["probabilities"].find { |h| h["label"] == "positive" }["probability"]
+    Contact.find(@contact_id).update(customersatisfaction__c: percentage)
   end
 end
