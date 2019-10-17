@@ -7,7 +7,7 @@ class Config
   end
 
   def self.private_key
-    ENV["EINSTEIN_VISION_PRIVATE_KEY"].gsub!('\n', "\n")
+    ENV["EINSTEIN_VISION_PRIVATE_KEY"]
   end
 end
 
@@ -21,8 +21,10 @@ class EinsteinSentimentAnalyzer
 
   def run
     exp = Time.now.to_i + (60 * 15)
+    private_key = Config.private_key
+    # private_key.gsub!('\n', "\n")
 
-    assertion = JwtHelper.new(@account_id, Config.private_key, exp).sign
+    assertion = JwtHelper.new(account_id, private_key, exp).sign
     token = JSON.parse(TokenGenerator.new(assertion).generate_token)
     puts "\nGenerated access token:\n"
     puts JSON.pretty_generate(token)
@@ -36,13 +38,13 @@ class EinsteinSentimentAnalyzer
       access_token = token["access_token"]
     end
 
-    puts "Predicting sentiment of comment: #{@comment}"
+    puts "Predicting sentiment of comment: #{comment}"
 
     # Make a prediction call
     prediction_response = JSON.parse(
         PredictHelper.new(access_token,
                               "CommunitySentiment",
-                              @comment).predict)
+                              comment).predict)
 
     puts "\nPrediction response:\n"
     puts JSON.pretty_generate(prediction_response)
