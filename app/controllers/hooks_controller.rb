@@ -25,7 +25,7 @@ class HooksController < ApplicationController
       phone_number = answers.find { |h| h[:field][:id] == FIELD_MAPPINGS[:phone_number] }[TYPE_MAPPINGS[:phone_number]]
       #comment = answers.find { |h| h[:field][:id] == FIELD_MAPPINGS[:comment] }[TYPE_MAPPINGS[:comment]]
 
-      @contact = Contact.create!(
+      contact = Contact.create!(
         lastname: answers.find { |h| h[:field][:id] == FIELD_MAPPINGS[:name] }[TYPE_MAPPINGS[:name]],
         email: answers.find { |h| h[:field][:id] == FIELD_MAPPINGS[:email] }[TYPE_MAPPINGS[:email]],
         phone: phone_number
@@ -51,9 +51,10 @@ class HooksController < ApplicationController
       #   response_answer: params[:result_answer],
       #   response_answer: params[:result_response]
       # )
-      response = params[:result_response]
+      response = params[:result_answer]
       puts "Answer from user: #{response}"
-      EinsteinSentimentAnalyzerJob.perform_later(@contact.id, response)
+      contact = Contact.where(phone: params[:participant_phone_number]).last
+      EinsteinSentimentAnalyzerJob.perform_later(contact.id, response)
     end
 
 
