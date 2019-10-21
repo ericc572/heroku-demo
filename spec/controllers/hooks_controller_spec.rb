@@ -1,8 +1,7 @@
 require "rails_helper"
 
 RSpec.describe HooksController do
-  describe "POST /hooks/survey_created" do
-    let(:submitted_at) { "#{Time.now.utc}"}
+    let(:submitted_at) { "#{Time.now.utc}" }
     let(:definition) {
       {
         "id": "DHsCKv",
@@ -30,9 +29,11 @@ RSpec.describe HooksController do
      ] }
 
     let(:form_response) {
-      submitted_at: submitted_at,
-      definition: definition
-      answers: answers
+      {
+        "submitted_at": submitted_at,
+        "definition": definition,
+        "answers": answers
+      }
     }
 
     let(:params) {
@@ -40,30 +41,16 @@ RSpec.describe HooksController do
         "form_response": form_response
       }
     }
-    before do
-      Resource.create!(heroku_uuid: "123", plan: plan)
-    end
+
 
     it "returns a 200" do
       post :survey_created, params: params
-
       expect(response.code).to eq("200")
     end
 
-    it "has the correct JSON body" do
-      expected = {
-        id: heroku_id,
-        message: "Hey ERIC!!! CHILDISH_GAMBINO is being provisioned.",
-      }
-
-      post :create, params: params
-      expect(JSON.parse(response.body, symbolize_names: true)).to eq(expected)
+    it "creates a new contact record" do
+      expect{ post :survey_created, params: params }
+       .to change(Contact, :count).by(1)
+       expect(Resource.find_by(hd: "123")).to be_nil
     end
-
-    it "deletes the associated resource model" do
-      delete :destroy, params: { "id": "123" }
-
-      expect(Resource.find_by(heroku_uuid: "123")).to be_nil
-    end
-  end
 end

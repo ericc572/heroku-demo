@@ -2,14 +2,15 @@ class HooksController < ApplicationController
   FIELD_MAPPINGS = {
     :name => 'kSHzJrMOjcMD',
     :email => 'qFfhkmeEyC9G',
-    :comment => 'uGwJkwgN6GEK'
+    :comment => 'uGwJkwgN6GEK',
+    :phone_number => 'AHFiyvOxGO7i'
   }
 
   TYPE_MAPPINGS = {
     :name => "text",
     :email => "text",
-    :comment => "text"
-    #:rating => { "choice" => "label" }
+    :comment => "text",
+    :phone_number => "phone_number"
   }
 
   def survey_created
@@ -21,18 +22,21 @@ class HooksController < ApplicationController
       answers = data[:answers]
       time = data[:submitted_at]
 
-      comment = answers.find { |h| h[:field][:id] == FIELD_MAPPINGS[:comment] }[TYPE_MAPPINGS[:comment]]
+      phone_number = answers.find { |h| h[:field][:id] == FIELD_MAPPINGS[:phone_number] }[TYPE_MAPPINGS[:phone_number]]
+      #comment = answers.find { |h| h[:field][:id] == FIELD_MAPPINGS[:comment] }[TYPE_MAPPINGS[:comment]]
 
-      contact = Contact.create!(
+      @contact = Contact.create!(
         lastname: answers.find { |h| h[:field][:id] == FIELD_MAPPINGS[:name] }[TYPE_MAPPINGS[:name]],
         email: answers.find { |h| h[:field][:id] == FIELD_MAPPINGS[:email] }[TYPE_MAPPINGS[:email]],
+        phone: phone_number
         # customersatisfaction__c: positive_percentage
       )
 
-      puts "comment: #{comment}"
+      #puts "comment: #{comment}"
 
-      puts "running einstein job:"
-      EinsteinSentimentAnalyzerJob.perform_later(contact.id, comment)
+      puts "Sending till SMS:"
+      TillSendSmsJob.perform_later(phone_number)
+
     end
     render status: 200, json: @s.to_json
   end
@@ -40,14 +44,19 @@ class HooksController < ApplicationController
   def sms_received
     puts "SMS was received. Saving data now: "
     if params.present?
-      SmsResponse.create!(
-        phone_number: params[:participant_phone_number],
-        question: params[:question_text],
-        response_timestamp: params[:result_timestamp],
-        response_choice: params[:result_answer],
-        response_answer: params[:result_response]
-      )
+      # SmsResponse.create!(
+      #   phone_number: params[:participant_phone_number],
+      #   question: params[:question_text],
+      #   response_timestamp: params[:result_timestamp],
+      #   response_answer: params[:result_answer],
+      #   response_answer: params[:result_response]
+      # )
+      response = params[:result_response]
+      puts "Answer from user: #{response}"
+      EinsteinSentimentAnalyzerJob.perform_later(@contact.id, response)
     end
+
+
     render status: 200
   end
 end

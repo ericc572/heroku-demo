@@ -46,9 +46,5 @@ module TypeformWebhooks
       expect(last_response.status).to eq(200)
       response = JSON.parse(last_response.body)
     end
-
-    it 'creates a contact' do
-      expect { post '/hooks/survey_created', JSON.generate(payload)}.to change(Contact, :count).by(1)
-    end
   end
 end
