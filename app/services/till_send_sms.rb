@@ -18,7 +18,7 @@ class TillSendSms
         "tag" => "camping_rating",
         "webhook" => "https://typeform-dreamforce.herokuapp.com/hooks/sms_received"
       }],
-      "conclusion" => "Thank you for your time!"
+      "conclusion" => "Thank you for your feedback. I hope you had an excellent experience!"
     }
 
     response = JSON.parse(RestClient.post(url, payload.to_json, content_type: :json))

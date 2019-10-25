@@ -35,7 +35,7 @@ class HooksController < ApplicationController
       #puts "comment: #{comment}"
 
       puts "Sending till SMS:"
-      TillSendSmsJob.perform_later(phone_number)
+      TillSendSmsJob.perform_later(phone_number: phone_number)
 
     end
     render status: 200, json: @s.to_json
