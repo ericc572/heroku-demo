@@ -15,6 +15,7 @@ To demonstrate the power of Heroku Add-ons, in our Dreamforce session titled “
 
 
 ## ➡️ Deploy to Heroku Button 💥
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 
 
 ## Flow
