@@ -35,7 +35,8 @@ To demonstrate the power of Heroku Add-ons, in our Dreamforce session titled “
 
 
 ## *🔍 Add-on Services*
-
+Attached Add-ons: 
+![Dashboard Screenshot:](/dashboard_addons.png?raw=true "Attached Addons: ")
 ### Einstein Vision/Language 👓
 
 _*Description*_:
