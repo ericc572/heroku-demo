@@ -1,0 +1,69 @@
+{
+  "addons": [
+    "einstein-vision",
+    "herokuconnect",
+    "papertrail",
+    "heroku-postgresql",
+    "heroku-redis",
+    "till"
+  ],
+  "buildpacks": [
+    {
+      "url": "heroku/ruby"
+    }
+  ],
+  "description": "Dreamforce Demo: Consumer facing typeform survey that uses a bunch of addons!",
+  "env": {
+    "EINSTEIN_VISION_ACCOUNT_ID": {
+      "required": true
+    },
+    "EINSTEIN_VISION_PRIVATE_KEY": {
+      "required": true
+    },
+    "EINSTEIN_VISION_URL": {
+      "required": true
+    },
+    "LANG": {
+      "required": true
+    },
+    "PAPERTRAIL_API_TOKEN": {
+      "required": true
+    },
+    "RACK_ENV": {
+      "required": true
+    },
+    "RAILS_ENV": {
+      "required": true
+    },
+    "RAILS_LOG_TO_STDOUT": {
+      "required": true
+    },
+    "RAILS_SERVE_STATIC_FILES": {
+      "required": true
+    },
+    "REDIS_PROVIDER": {
+      "required": true
+    },
+    "REDIS_URL": {
+      "required": true
+    },
+    "SECRET_KEY_BASE": {
+      "required": true
+    },
+    "TILL_URL": {
+      "required": true
+    }
+  },
+  "formation": {
+    "worker": {
+      "quantity": 1
+    },
+    "web": {
+      "quantity": 1
+    }
+  },
+  "name": "typeform-hconnect",
+  "scripts": {
+  },
+  "stack": "heroku-18"
+}
