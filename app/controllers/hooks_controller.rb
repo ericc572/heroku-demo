@@ -29,6 +29,7 @@ class HooksController < ApplicationController
         lastname: answers.find { |h| h[:field][:id] == FIELD_MAPPINGS[:name] }[TYPE_MAPPINGS[:name]],
         email: answers.find { |h| h[:field][:id] == FIELD_MAPPINGS[:email] }[TYPE_MAPPINGS[:email]],
         phone: phone_number
+        heroku_uuid: SecureRandom.uuid
         # customersatisfaction__c: positive_percentage
       )
 
