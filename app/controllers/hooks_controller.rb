@@ -28,8 +28,8 @@ class HooksController < ApplicationController
       contact = Contact.create!(
         lastname: answers.find { |h| h[:field][:id] == FIELD_MAPPINGS[:name] }[TYPE_MAPPINGS[:name]],
         email: answers.find { |h| h[:field][:id] == FIELD_MAPPINGS[:email] }[TYPE_MAPPINGS[:email]],
-        phone: phone_number
-        heroku_uuid: SecureRandom.uuid
+        phone: phone_number,
+        herokuid__c: SecureRandom.uuid
         # customersatisfaction__c: positive_percentage
       )
 
