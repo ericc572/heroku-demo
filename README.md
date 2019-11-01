@@ -33,11 +33,14 @@ To demonstrate the power of Heroku Add-ons, in our Dreamforce session titled “
 2. User responds to Till SMS
 3. User response is sent to Einstein Language to analyze sentiment using community model.
 4. Percentage positivity is returned, and corresponding contact record in Salesforce is updated.
-
-
 ## *🔍 Add-on Services*
-Attached Add-ons: 
+Attached Add-ons:
 ![Dashboard Screenshot:](/dashboard_addons.png?raw=true "Attached Addons: ")
+
+## Technical Architecture
+![Architectural Diagram:](/technical_diagram.png?raw=true)
+
+
 ### Einstein Vision/Language 👓
 
 _*Description*_:
@@ -91,6 +94,6 @@ Once customer survey response is sent, use Till to deliver an SMS question to th
 
 
 ## Glossary/Links
-- queue:
-- webhook:
-- Heroku Ecosystem:
+- queue: A First in, first out collection mechanism for ordering items. Used here to schedule background jobs aka processes
+- webhook: A way to schedule event notifications to another API in real time.
+- Heroku Ecosystem: Our Elements Marketplace allow you to extend functionality of your app by attaching 200+ easy to use, preconfigured addons: https://elements.heroku.com.
