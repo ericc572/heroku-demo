@@ -3,7 +3,7 @@
 
 To demonstrate the power of Heroku Add-ons, in our Dreamforce session titled “*Customizing your app with Heroku Add-ons*”, we show how easily you can provision/extend the functionality of your Heroku web application using a variety of addons.
 
-### URL: http://typeform-dreamforce.herokuapp.com (http://typeform-dreamforce.herokuapp.com/)
+### URL: http://happy-trails-campground.herokuapp.com (http://happy-trails-campground.herokuapp.com/)
 
 
 ## 💻  Requirements

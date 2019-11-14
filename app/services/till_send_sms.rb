@@ -16,7 +16,7 @@ class TillSendSms
       "questions" => [{
         "text" => "Hi! How was your camping experience today?",
         "tag" => "camping_rating",
-        "webhook" => "https://typeform-dreamforce.herokuapp.com/hooks/sms_received"
+        "webhook" => "https://happy-trails-campground.herokuapp.com/hooks/sms_received"
       }],
       "conclusion" => "Thank you for your feedback. I hope you had an excellent experience!"
     }
